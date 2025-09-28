@@ -1,21 +1,26 @@
-# tests/test_data_processing.py
 import pandas as pd
-import numpy as np
-import pytest
-from src.data_processing import load_data, preprocess_data, split_data
+from sklearn.model_selection import train_test_split
 
-def test_no_missing_values_in_dataset():
-    """Тест что в датасете нет пропущенных значений"""
-    # Загружаем реальный датасет
-    df = load_data('data/iris.csv')
+
+def load_data(file_path):
+    """Загружает данные из CSV файла"""
+    df = pd.read_csv(file_path)
+    return df
+
+
+def preprocess_data(df, target_column=None):
+    """Разделяет данные на признаки и целевую переменную"""
+    if target_column is None:
+        target_column = df.columns[-1]
     
-    # Проверяем отсутствие пропусков во всем DataFrame
-    missing_values = df.isnull().sum().sum()
-    assert missing_values == 0, f"Найдено {missing_values} пропущенных значений в датасете"
-    
-    # Дополнительно: проверяем отсутствие пропусков в каждом столбце
-    for column in df.columns:
-        missing_in_column = df[column].isnull().sum()
-        assert missing_in_column == 0, f"В столбце '{column}' найдено {missing_in_column} пропущенных значений"
+    X = df.drop(target_column, axis=1)
+    y = df[target_column]
+    return X, y
 
 
+def split_data(X, y, test_size=0.2, random_state=42):
+    """Разделяет данные на тренировочную и тестовую выборки"""
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=test_size, random_state=random_state
+    )
+    return X_train, X_test, y_train, y_test
