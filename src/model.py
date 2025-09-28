@@ -1,4 +1,3 @@
-# src/model.py
 from sklearn.ensemble import RandomForestClassifier
 
 
