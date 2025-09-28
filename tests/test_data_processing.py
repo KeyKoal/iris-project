@@ -1,26 +1,24 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
+from src.data_processing import preprocess_data, split_data
 
 
-def load_data(file_path):  
-    """Загружает данные из CSV файла"""
-    df = pd.read_csv(file_path)
-    return df
+def test_preprocess_data_removes_target_column():
+    """Тест что целевая переменная удаляется из признаков"""
+    test_data = pd.DataFrame({
+        'feature1': [1, 2, 3],
+        'feature2': [4, 5, 6],
+        'species': ['setosa', 'versicolor', 'virginica']
+    })
+
+    X, y = preprocess_data(test_data, 'species')
+    assert 'species' not in X.columns
 
 
-def preprocess_data(df, target_column=None):  
-    """Разделяет данные на признаки и целевую переменную"""
-    if target_column is None:
-        target_column = df.columns[-1]
-    
-    X = df.drop(target_column, axis=1)
-    y = df[target_column]
-    return X, y
+def test_split_data_proportions():
+    """Тест корректности разделения данных"""
+    X = pd.DataFrame({'feature': range(100)})
+    y = pd.Series(range(100))
 
-
-def split_data(X, y, test_size=0.2, random_state=42):  
-    """Разделяет данные на тренировочную и тестовую выборки"""
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=test_size, random_state=random_state
-    )
-    return X_train, X_test, y_train, y_test
+    X_train, X_test, y_train, y_test = split_data(X, y, test_size=0.2)
+    assert len(X_train) == 80
+    assert len(X_test) == 20
