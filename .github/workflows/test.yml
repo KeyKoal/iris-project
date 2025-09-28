@@ -41,6 +41,11 @@ jobs:
         pip install pip-audit
         pip-audit|| true
 
+    - name: Build and test Docker image
+      run: |
+        docker build -t iris-classifier .
+        docker run --rm iris-classifier
+
     - name: Send email notification
       if: always()
       uses: dawidd6/action-send-mail@v3
