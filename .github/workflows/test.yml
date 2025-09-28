@@ -41,6 +41,27 @@ jobs:
         pip install pip-audit
         pip-audit|| true
 
+    - name: Send email notification
+      if: always()
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 587
+        username: ${{secrets.EMAIL_USERNAME}}
+        password: ${{secrets.EMAIL_PASSWORD}}
+        to: hludneva.valeria@gmail.com
+        from: GitHub Actions
+        subject: "Tests ${{ job.status }}: ${{ github.workflow }}"
+        body: |
+          Repository: ${{ github.repository }}
+          Workflow: ${{ github.workflow }}
+          Status: ${{ job.status }}
+          Branch: ${{ github.ref }}
+          Commit: ${{ github.sha }}
+          Triggered by: ${{ github.actor }}
+
+          View details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
   docker-security:
     runs-on: ubuntu-latest
     needs: test
