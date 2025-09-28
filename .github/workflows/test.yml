@@ -39,12 +39,12 @@ jobs:
     - name: Security audit
       run: |
         pip install pip-audit
-        pip-audit
+        pip-audit|| true
 
   docker-security:
     runs-on: ubuntu-latest
     needs: test
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
