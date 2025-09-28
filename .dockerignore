@@ -9,3 +9,5 @@ venv/
 .env
 .git/
 .github/
+.jupyter/
+.ipynb_checkpoints/

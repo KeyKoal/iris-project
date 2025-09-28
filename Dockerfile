@@ -1,7 +1,6 @@
-# Dockerfile
 FROM python:3.12-slim
 
-# Создаем non-root пользователя
+# Создаем non-root пользователя (требование безопасности)
 RUN useradd --create-home --shell /bin/bash appuser
 WORKDIR /home/appuser
 
